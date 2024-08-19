@@ -1,4 +1,4 @@
-import { Authenticator, AuthorizationError } from 'remix-auth';
+import { Authenticator } from 'remix-auth';
 import { sessionStorage } from './session.server';
 import { OAuth2StrategyOptions } from 'remix-auth-oauth2';
 import { AsyncLocalStorage } from 'node:async_hooks';

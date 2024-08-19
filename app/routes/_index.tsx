@@ -1,12 +1,7 @@
-import type {
-  LoaderFunction,
-  LoaderFunctionArgs,
-  MetaFunction,
-} from '@remix-run/node';
+import type { LoaderFunctionArgs, MetaFunction } from '@remix-run/node';
 import { sessionStorage } from '~/utils/session.server';
 import { authenticator } from '~/utils/auth.server';
 import {
-  getRequestOrigin,
   getAuthorizationServerOrigin,
   isBuilderUrl,
 } from '../utils/origins.server';
