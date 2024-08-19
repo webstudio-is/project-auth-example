@@ -12,12 +12,11 @@ import {
   getRequestOrigin,
   parseBuilderUrl,
 } from './origins.server';
-import { FormStrategy } from 'remix-auth-form';
 import createDebug from 'debug';
 import { readAccessToken } from './token.server';
 import { userHasAccessTo } from './permissions.server';
 
-const debug = createDebug('Auth').extend('Authenticator');
+const debug = createDebug('Auth').extend('BuilderAuthenticator');
 
 const asyncLocalStorage = new AsyncLocalStorage<
   Partial<OAuth2StrategyOptions> &
@@ -30,6 +29,7 @@ const asyncLocalStorage = new AsyncLocalStorage<
 type User = {
   id: string;
   email: string;
+  sessionIssueDate: number;
 };
 
 export const builderAuthenticator = new Authenticator<User>(
@@ -39,10 +39,11 @@ export const builderAuthenticator = new Authenticator<User>(
   }
 );
 
-const getUserById = (id: string) => {
+const getUserById = (id: string): User => {
   return {
     id,
     email: 'ice@yandex.ru',
+    sessionIssueDate: Date.now(),
   };
 };
 

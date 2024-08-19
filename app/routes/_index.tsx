@@ -21,6 +21,10 @@ export const meta: MetaFunction = () => {
 };
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
+  const sess = await sessionStorage.getSession(request.headers.get('Cookie'));
+
+  console.log(sess.data);
+
   const user = isBuilderUrl(request.url)
     ? await builderAuthenticator.isAuthenticated(request)
     : await authenticator.isAuthenticated(request);
@@ -30,6 +34,17 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     isBuilderUrl: isBuilderUrl(request.url),
     origin: getAuthorizationServerOrigin(request),
   };
+};
+
+const fetchAllProjectIdsLoggedInAfterIssueDate = async (
+  userId: string,
+  issueDate: number
+) => {
+  return [
+    {
+      id: '9ccd96e1-de48-4f3f-898b-042e890ae805',
+    },
+  ];
 };
 
 export default function Index() {
@@ -55,26 +70,38 @@ export default function Index() {
                 Project link
               </a>
             </li>
+            {data.user != null && (
+              <li>
+                <a
+                  className="text-blue-700 underline visited:text-purple-900"
+                  href="#"
+                  rel="noreferrer"
+                  onClick={async (event) => {
+                    if (data.user == null) {
+                      return;
+                    }
 
-            <li>
-              <a
-                className="text-blue-700 underline visited:text-purple-900"
-                href="#"
-                rel="noreferrer"
-                onClick={async (event) => {
-                  await fetch(`${projectUrl.origin}/logout`, {
-                    method: 'GET',
-                    headers: {
-                      'Content-Type': 'application/json',
-                    },
-                    redirect: 'manual',
-                    credentials: 'include',
-                  });
-                }}
-              >
-                Try logout
-              </a>
-            </li>
+                    const projectsToLogout =
+                      await fetchAllProjectIdsLoggedInAfterIssueDate(
+                        data.user.id,
+                        data.user.sessionIssueDate
+                      );
+
+                    // @todo iterate over projectsToLogout and logout from each project using fetch
+                    await fetch(`${projectUrl.origin}/logout`, {
+                      method: 'GET',
+                      headers: {
+                        'Content-Type': 'application/json',
+                      },
+                      redirect: 'manual',
+                      credentials: 'include',
+                    });
+                  }}
+                >
+                  Logout from Project {data.user.sessionIssueDate}
+                </a>
+              </li>
+            )}
 
             <li>
               <a
