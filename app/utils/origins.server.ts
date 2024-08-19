@@ -1,5 +1,3 @@
-import { OAuth2StrategyOptionsOverrides } from '~/auth-strategy/ws.server';
-
 export const getRequestOrigin = (request: Request) => {
   const url = new URL(request.url);
 
@@ -69,10 +67,10 @@ export const isBuilderUrl = (urlStr: string): boolean => {
   return projectId !== undefined;
 };
 
-export function getAuthorisationEndpointOrigin(request: Request): string;
-export function getAuthorisationEndpointOrigin(origin: string): string;
+export function getAuthorizationServerOrigin(request: Request): string;
+export function getAuthorizationServerOrigin(origin: string): string;
 
-export function getAuthorisationEndpointOrigin(
+export function getAuthorizationServerOrigin(
   request: string | Request
 ): string {
   const origin =

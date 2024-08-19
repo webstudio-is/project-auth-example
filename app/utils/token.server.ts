@@ -21,7 +21,6 @@ const normalizeKey = (key: string, length = 32) => {
   }
 };
 
-// Encryption
 export const encrypt = async (text: string, key: string) => {
   const enc = new TextEncoder();
   const keyBuffer = await crypto.subtle.importKey(
@@ -43,7 +42,6 @@ export const encrypt = async (text: string, key: string) => {
   );
 };
 
-// Decryption
 export const decrypt = async (ciphertext: string, key: string) => {
   const enc = new TextEncoder();
   const keyBuffer = await crypto.subtle.importKey(
@@ -83,6 +81,20 @@ const CodeTokenPayloadEncSchema = z.object({
 
 type CodeTokenPayload = z.infer<typeof CodeTokenPayloadEncSchema>;
 
+/**
+ * JWT is used because it includes a signature check and expiration,
+ * allowing us to verify in a single call that the token was issued by us and has not expired
+ *
+ * The token is encrypted in accordance with the RFC.
+ *
+ * https://datatracker.ietf.org/doc/html/rfc7636#section-4.4
+ *
+ * Typically, the "code_challenge" and "code_challenge_method" values
+ * are stored in encrypted form in the "code" itself but could
+ * alternatively be stored on the server associated with the code.  The
+ * server MUST NOT include the "code_challenge" value in client requests
+ * in a form that other entities can extract.
+ */
 export const createCodeToken = async (
   payload: CodeTokenPayload,
   secret: string,
@@ -128,6 +140,10 @@ const AccessTokenPayloadSchema = z.object({
 
 type AccessTokenPayload = z.infer<typeof AccessTokenPayloadSchema>;
 
+/**
+ * JWT is used because it includes a signature check and expiration,
+ * allowing us to verify in a single call that the token was issued by us and has not expired
+ */
 export const createAccessToken = async (
   payload: AccessTokenPayload,
   secret: string,

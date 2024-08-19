@@ -7,7 +7,7 @@ import { sessionStorage } from '~/utils/session.server';
 import { authenticator } from '~/utils/auth.server';
 import {
   getRequestOrigin,
-  getAuthorisationEndpointOrigin,
+  getAuthorizationServerOrigin,
   isBuilderUrl,
 } from '../utils/origins.server';
 import { useLoaderData } from '@remix-run/react';
@@ -25,7 +25,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   return {
     user,
     isBuilderUrl: isBuilderUrl(request.url),
-    origin: getAuthorisationEndpointOrigin(request),
+    origin: getAuthorizationServerOrigin(request),
   };
 };
 

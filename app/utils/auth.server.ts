@@ -1,8 +1,4 @@
-import {
-  Authenticator,
-  AuthorizationError,
-  StrategyVerifyCallback,
-} from 'remix-auth';
+import { Authenticator, AuthorizationError } from 'remix-auth';
 import { sessionStorage } from './session.server';
 import env from './env.server';
 import { OAuth2StrategyOptions } from 'remix-auth-oauth2';
@@ -12,7 +8,7 @@ import {
   WSStrategy,
 } from '~/auth-strategy/ws.server';
 import {
-  getAuthorisationEndpointOrigin,
+  getAuthorizationServerOrigin,
   getRequestOrigin,
   parseBuilderUrl,
 } from './origins.server';
@@ -94,7 +90,7 @@ authenticator.use(
     },
     (request: Request): OAuth2StrategyOptionsOverrides => {
       const origin = getRequestOrigin(request);
-      const authOrigin = getAuthorisationEndpointOrigin(request);
+      const authOrigin = getAuthorizationServerOrigin(request);
       const { projectId } = parseBuilderUrl(request.url);
 
       if (origin === authOrigin) {
@@ -114,10 +110,7 @@ authenticator.use(
 
 authenticator.use(
   new FormStrategy(async ({ form }) => {
-    return {
-      id: '123',
-      email: 'hello@hello.com',
-    };
+    return getUserById('123');
   }),
   'dev'
 );

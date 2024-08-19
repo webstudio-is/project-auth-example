@@ -1,7 +1,7 @@
 import { LoaderFunctionArgs } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import { authenticator } from '~/utils/auth.server';
-import { getAuthorisationEndpointOrigin } from '~/utils/origins.server';
+import { getAuthorizationServerOrigin } from '~/utils/origins.server';
 import { sessionStorage } from '~/utils/session.server';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
@@ -9,7 +9,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     await sessionStorage.getSession(request.headers.get('Cookie'))
   ).get(authenticator.sessionErrorKey);
 
-  return { error, origin: getAuthorisationEndpointOrigin(request) };
+  return { error, origin: getAuthorizationServerOrigin(request) };
 };
 
 export default () => {

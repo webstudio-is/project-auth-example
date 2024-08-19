@@ -11,7 +11,15 @@ import {
 import createDebug from 'debug';
 import { fromError } from 'zod-validation-error';
 
+/**
+ * OAuth 2.0 Token Request
+ *
+ * https://datatracker.ietf.org/doc/html/rfc7636#section-4.5
+ *
+ * https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.3
+ */
 const TokenRequestSchema = z.object({
+  // Check that the grant_type parameter is present and is one of the supported values
   grant_type: z.literal('authorization_code'),
   code: z.string(),
   redirect_uri: z.string().url(),
@@ -22,6 +30,13 @@ const TokenRequestSchema = z.object({
 
 const debug = createDebug('OAuth').extend('Token');
 
+/**
+ * OAuth 2.0 Token Request
+ *
+ * https://datatracker.ietf.org/doc/html/rfc7636
+ *
+ * https://datatracker.ietf.org/doc/html/rfc6749
+ */
 export const action = async ({ request }: ActionFunctionArgs) => {
   debug('Token request received');
   const jsonBody = Object.fromEntries((await request.formData()).entries());
@@ -44,6 +59,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   const body = parsedBody.data;
 
+  // Validate the client’s credentials (e.g., client_id and client_secret) using HTTP Basic Authentication or form-encoded parameters.
   if (
     body.client_id !== env.WS_CLIENT_ID ||
     body.client_secret !== env.WS_CLIENT_SECRET
@@ -59,6 +75,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     );
   }
 
+  // Ensure the code parameter is present and valid.
   const codeToken = await readCodeToken(body.code, env.WS_CLIENT_SECRET);
 
   if (codeToken === undefined) {
@@ -73,6 +90,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     );
   }
 
+  // verify the code_verifier against the stored code_challenge
   if (
     false ===
     (await verifyChallenge(body.code_verifier, codeToken.codeChallenge))
@@ -108,7 +126,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   const maxAge = 1000 * 60;
 
-  // Generate short lived token, as the only purpose of this token is to login the user
+  // Generate a short-lived token, as its sole purpose is to log the user in.
   const accessToken = await createAccessToken(
     { userId, projectId },
     env.WS_CLIENT_SECRET,
