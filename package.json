@@ -1,0 +1,56 @@
+{
+  "name": "remix-play-2",
+  "private": true,
+  "sideEffects": false,
+  "type": "module",
+  "scripts": {
+    "build": "remix vite:build",
+    "dev": "DEBUG=OAuth2Strategy,OAuth.*,Auth.* remix vite:dev",
+    "lint": "eslint --ignore-path .gitignore --cache --cache-location ./node_modules/.cache/eslint .",
+    "start": "remix-serve ./build/server/index.js",
+    "typecheck": "tsc"
+  },
+  "dependencies": {
+    "@remix-run/node": "^2.11.2",
+    "@remix-run/react": "^2.11.2",
+    "@remix-run/serve": "^2.11.2",
+    "@tsndr/cloudflare-worker-jwt": "^2.5.3",
+    "@types/debug": "^4.1.12",
+    "debug": "^4.3.6",
+    "isbot": "^4.1.0",
+    "nanoid": "^5.0.7",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "remix-auth": "^3.7.0",
+    "remix-auth-form": "^1.5.0",
+    "remix-auth-oauth2": "^2.3.0",
+    "tiny-invariant": "^1.3.3",
+    "type-fest": "^4.24.0",
+    "zod": "^3.23.8",
+    "zod-validation-error": "^3.3.1"
+  },
+  "devDependencies": {
+    "@remix-run/dev": "^2.11.2",
+    "@types/react": "^18.2.20",
+    "@types/react-dom": "^18.2.7",
+    "@typescript-eslint/eslint-plugin": "^6.7.4",
+    "@typescript-eslint/parser": "^6.7.4",
+    "@vitejs/plugin-basic-ssl": "^1.1.0",
+    "autoprefixer": "^10.4.19",
+    "eslint": "^8.38.0",
+    "eslint-import-resolver-typescript": "^3.6.1",
+    "eslint-plugin-import": "^2.28.1",
+    "eslint-plugin-jsx-a11y": "^6.7.1",
+    "eslint-plugin-react": "^7.33.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "postcss": "^8.4.38",
+    "tailwindcss": "^3.4.4",
+    "typescript": "^5.1.6",
+    "vite": "^5.1.0",
+    "vite-tsconfig-paths": "^4.2.1",
+    "vitest": "^2.0.5"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}
