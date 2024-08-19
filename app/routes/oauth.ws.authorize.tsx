@@ -41,7 +41,7 @@ const createOauthError =
 const OAuthParamsSchema = z.object({
   // Ensure that the response_type is valid and supported by the authorization server (e.g., code for the authorization code grant type).
   response_type: z.literal('code'),
-  redirect_uri: z.string(),
+  redirect_uri: z.string().url(),
 
   client_id: z.string(),
   state: z.string(),
@@ -58,7 +58,7 @@ const OAuthParamsSchema = z.object({
 });
 
 const OAuthRedirectUriSchema = z.object({
-  redirect_uri: z.string(),
+  redirect_uri: z.string().url(),
 });
 
 /**
