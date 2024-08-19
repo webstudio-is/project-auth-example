@@ -1,6 +1,6 @@
 import type { LoaderFunction } from '@remix-run/node';
 import { AuthorizationError } from 'remix-auth';
-import { authenticator } from '~/utils/auth.server';
+import { builderAuthenticator } from '~/utils/builder-auth.server';
 import { returnToPath } from '~/utils/return-to.cookie.server';
 import { isBuilderUrl } from '~/utils/origins.server';
 import createDebug from 'debug';
@@ -22,7 +22,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 
     debug('Start exchanging the code for the access token');
 
-    await authenticator.authenticate('ws', request, {
+    await builderAuthenticator.authenticate('ws', request, {
       throwOnError: false,
       successRedirect: returnTo,
       failureRedirect: '/error',

@@ -11,6 +11,7 @@ import {
   isBuilderUrl,
 } from '../utils/origins.server';
 import { useLoaderData } from '@remix-run/react';
+import { builderAuthenticator } from '~/utils/builder-auth.server';
 
 export const meta: MetaFunction = () => {
   return [
@@ -20,7 +21,9 @@ export const meta: MetaFunction = () => {
 };
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const user = await authenticator.isAuthenticated(request);
+  const user = isBuilderUrl(request.url)
+    ? await builderAuthenticator.isAuthenticated(request)
+    : await authenticator.isAuthenticated(request);
 
   return {
     user,
@@ -50,6 +53,26 @@ export default function Index() {
                 rel="noreferrer"
               >
                 Project link
+              </a>
+            </li>
+
+            <li>
+              <a
+                className="text-blue-700 underline visited:text-purple-900"
+                href="#"
+                rel="noreferrer"
+                onClick={async (event) => {
+                  await fetch(`${projectUrl.origin}/logout`, {
+                    method: 'GET',
+                    headers: {
+                      'Content-Type': 'application/json',
+                    },
+                    redirect: 'manual',
+                    credentials: 'include',
+                  });
+                }}
+              >
+                Try logout
               </a>
             </li>
 

@@ -1,13 +1,21 @@
 import { LoaderFunctionArgs } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import { authenticator } from '~/utils/auth.server';
-import { getAuthorizationServerOrigin } from '~/utils/origins.server';
+import { builderSessionStorage } from '~/utils/builder-session.server';
+import {
+  getAuthorizationServerOrigin,
+  isBuilderUrl,
+} from '~/utils/origins.server';
 import { sessionStorage } from '~/utils/session.server';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  let error = await (
-    await sessionStorage.getSession(request.headers.get('Cookie'))
-  ).get(authenticator.sessionErrorKey);
+  let error = isBuilderUrl(request.url)
+    ? await (
+        await builderSessionStorage.getSession(request.headers.get('Cookie'))
+      ).get(authenticator.sessionErrorKey)
+    : await (
+        await sessionStorage.getSession(request.headers.get('Cookie'))
+      ).get(authenticator.sessionErrorKey);
 
   return { error, origin: getAuthorizationServerOrigin(request) };
 };

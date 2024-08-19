@@ -28,6 +28,11 @@ export default defineConfig(({ mode }) => {
       host: '0.0.0.0',
       // Needed for SSL
       proxy: {},
+      cors: {
+        origin: 'https://wstd.dev:5175',
+        preflightContinue: false,
+        credentials: true,
+      },
     },
   };
 });

@@ -1,5 +1,5 @@
 import type { LoaderFunction } from '@remix-run/node';
-import { authenticator } from '~/utils/auth.server';
+import { builderAuthenticator } from '~/utils/builder-auth.server';
 import { isBuilderUrl } from '~/utils/origins.server';
 import createDebug from 'debug';
 
@@ -20,7 +20,7 @@ export const loader: LoaderFunction = async ({ request }) => {
       'Authenticate request received, starting authentication and authorization process'
     );
 
-    return await authenticator.authenticate('ws', request, {
+    return await builderAuthenticator.authenticate('ws', request, {
       throwOnError: true,
     });
   } catch (error) {
