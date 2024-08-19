@@ -87,15 +87,21 @@ export default function Index() {
                         data.user.sessionIssueDate
                       );
 
-                    // @todo iterate over projectsToLogout and logout from each project using fetch
-                    await fetch(`${projectUrl.origin}/logout`, {
-                      method: 'GET',
-                      headers: {
-                        'Content-Type': 'application/json',
-                      },
-                      redirect: 'manual',
-                      credentials: 'include',
-                    });
+                    // @todo use https://github.com/sindresorhus/p-all to execute in parallel like concurrency=5 stopOnError=false
+                    // @todo remove /logout from rate limiter
+                    for (const project of projectsToLogout) {
+                      const projectUrl = new URL(data.origin);
+                      projectUrl.host = `p-${project.id}.${projectUrl.host}`;
+
+                      await fetch(`${projectUrl.origin}/logout`, {
+                        method: 'GET',
+                        headers: {
+                          'Content-Type': 'application/json',
+                        },
+                        redirect: 'manual',
+                        credentials: 'include',
+                      });
+                    }
                   }}
                 >
                   Logout from Project {data.user.sessionIssueDate}
