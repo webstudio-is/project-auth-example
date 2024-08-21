@@ -1,8 +1,7 @@
 import { vitePlugin as remix } from '@remix-run/dev';
 import { CorsOptions, defineConfig, type Plugin } from 'vite';
 import tsconfigPaths from 'vite-tsconfig-paths';
-import basicSsl from '@vitejs/plugin-basic-ssl';
-
+import { readFileSync } from 'node:fs';
 import type { IncomingMessage } from 'node:http';
 import {
   getAuthorizationServerOrigin,
@@ -10,17 +9,8 @@ import {
 } from './app/utils/origins.server';
 
 export default defineConfig(({ mode }) => {
-  if (mode === 'development') {
-    // Enable self-signed certificates for development service 2 service fetch calls.
-    // This is particularly important for secure communication with the oauth.ws.token endpoint.
-    process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
-  }
-
   return {
     plugins: [
-      // Type "thisisunsafe" in Chrome to bypass SSL warnings for wstd.dev domains
-      basicSsl() as Plugin<unknown>,
-
       remix({
         future: {
           v3_fetcherPersist: true,
@@ -32,9 +22,14 @@ export default defineConfig(({ mode }) => {
     ],
     server: {
       // Service-to-service OAuth token call requires a specified host for the wstd.dev domain
-      host: '0.0.0.0',
+      host: 'wstd.dev',
       // Needed for SSL
       proxy: {},
+
+      https: {
+        key: readFileSync('./https/privkey.pem'),
+        cert: readFileSync('./https/fullchain.pem'),
+      },
 
       cors: ((
         req: IncomingMessage,
