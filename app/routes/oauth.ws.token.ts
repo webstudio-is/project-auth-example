@@ -61,8 +61,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   // Validate the client’s credentials (e.g., client_id and client_secret) using HTTP Basic Authentication or form-encoded parameters.
   if (
-    body.client_id !== env.WS_CLIENT_ID ||
-    body.client_secret !== env.WS_CLIENT_SECRET
+    body.client_id !== env.AUTH_WS_CLIENT_ID ||
+    body.client_secret !== env.AUTH_WS_CLIENT_SECRET
   ) {
     debug('client_id and client_secret do not match', body.code);
     return json(
@@ -76,7 +76,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   }
 
   // Ensure the code parameter is present and valid.
-  const codeToken = await readCodeToken(body.code, env.WS_CLIENT_SECRET);
+  const codeToken = await readCodeToken(body.code, env.AUTH_WS_CLIENT_SECRET);
 
   if (codeToken === undefined) {
     debug('Code can not be read', body.code);
@@ -129,7 +129,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   // Generate a short-lived token, as its sole purpose is to log the user in.
   const accessToken = await createAccessToken(
     { userId, projectId },
-    env.WS_CLIENT_SECRET,
+    env.AUTH_WS_CLIENT_SECRET,
     {
       maxAge,
     }
@@ -139,7 +139,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   debug(
     'readAccessToken',
-    await readAccessToken(accessToken, env.WS_CLIENT_SECRET)
+    await readAccessToken(accessToken, env.AUTH_WS_CLIENT_SECRET)
   );
 
   return json(

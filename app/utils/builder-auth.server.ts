@@ -50,8 +50,8 @@ const getUserById = (id: string): User => {
 builderAuthenticator.use(
   new WSStrategy<User>(
     {
-      clientId: env.WS_CLIENT_ID,
-      clientSecret: env.WS_CLIENT_SECRET,
+      clientId: env.AUTH_WS_CLIENT_ID,
+      clientSecret: env.AUTH_WS_CLIENT_SECRET,
       authorizationEndpoint: 'https://OVERRIDED_ENDPOINT/oauth2/authorize',
       tokenEndpoint: 'https://OVERRIDED_ENDPOINT/oauth2/token',
       redirectURI: 'https://OVERRIDED_ENDPOINT/auth/callback',
@@ -63,7 +63,7 @@ builderAuthenticator.use(
       // what you do inside this and how you find the user is up to you
       const accessToken = await readAccessToken(
         tokens.access_token,
-        env.WS_CLIENT_SECRET
+        env.AUTH_WS_CLIENT_SECRET
       );
 
       if (accessToken === undefined) {

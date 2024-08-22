@@ -128,7 +128,7 @@ export const loader: LoaderFunction = async ({ request }) => {
     oauthError = createOauthError(redirect_uri, parsedOAuthParams.data.state);
 
     // client_id: Verify that the client_id is valid and corresponds to a registered client.
-    if (parsedOAuthParams.data.client_id !== env.WS_CLIENT_ID) {
+    if (parsedOAuthParams.data.client_id !== env.AUTH_WS_CLIENT_ID) {
       debug('Client is not registered');
 
       return oauthError('unauthorized_client', 'Client is not registered');
@@ -164,7 +164,7 @@ export const loader: LoaderFunction = async ({ request }) => {
           projectId: oAuthParams.scope.projectId,
           codeChallenge: oAuthParams.code_challenge,
         },
-        env.WS_CLIENT_SECRET,
+        env.AUTH_WS_CLIENT_SECRET,
         { maxAge: 1000 * 60 * 5 }
       );
 
